@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<% if params[:action].eql?("show")%>
+  <%= link_to 'Back', profiles_path %> | <%= link_to 'Destroy', @profile, method: :delete, data: { confirm: 'Are you sure?' } %>
+<% else %>
+  <%= link_to "Back", ( @profile.directories.eql?(@back_url) ? profile_path(@profile) : sub_folder_profile_path(id: @profile.id, directory: @back_url)) %>
+<% end %>
+ <br />
+
+<p>
+  <strong>Name:</strong>
+  <%= @profile.name %>
+</p>
+
+<p>
+  <strong>Directories:</strong>
+  <%= @profile.directories %>
+</p>
+
+<p>
+  <strong>Exclusions:</strong>
+  <%= @profile.exclusions %>
+</p>
+
+<p>
+  <strong>Total size:</strong>
+  <%= @total_size %>
+</p>
+<table class="table table-hover">
+
+<% @content.each do |file| %>
+  <tr>
+    <% if file[:type].eql?("directory") %>
+      <td>
+        <%= link_to file[:name], sub_folder_profile_path(id: @profile.id, directory: file[:directory]) %>
+        <div class="pull-right">directory</div>
+      </td>
+    <% else %>
+      <td>
+        <%= file[:name] %>
+        <div class="pull-right">
+          <%= file[:size] %>
+          <%= link_to 'Delete', destroy_file_profiles_path(file_name: file[:name], directory: @directory ), method: :delete, data: { confirm: 'Are you sure?' } %>
+        </div>
+      </td>
+    <% end %>
+  </tr>
+<% end %>
+</table>
